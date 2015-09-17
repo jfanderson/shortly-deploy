@@ -3,6 +3,18 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      client: {
+        src: [
+          'public/client/**/*.js'
+        ],
+        dest: 'public/dist/client.js'
+      },
+      dependencies: {
+        src: [
+          'public/lib/**/*.js'
+        ],
+        dest: 'public/dist/dependencies.js'
+      }
     },
 
     mochaTest: {
@@ -21,14 +33,26 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      client: {
+        src: [
+          'public/dist/client.js'
+        ],
+        dest: 'public/dist/client.min.js'
+      },
+      dependencies : {
+        src: [
+          'public/dist/dependencies.js'
+        ],
+        dest: 'public/dist/dependencies.min.js'
+      }
     },
 
     jshint: {
-      files: [
+      files: {
         // Add filespec list here
-      ],
+        src: [ 'app/**/*.js', 'lib/*.js', 'server.js' ]
+      },
       options: {
-        force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
           'public/lib/**/*.js',
@@ -39,6 +63,12 @@ module.exports = function(grunt) {
 
     cssmin: {
         // Add filespec list here
+        target: {
+          src: [
+            'public/style.css'
+          ],
+          dest: 'public/dist/style.min.css'
+        }
     },
 
     watch: {
@@ -60,6 +90,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push azure master'
       }
     },
   });
@@ -95,11 +126,17 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'jshint',
+    'concat', 
+    'uglify',
+    'cssmin'
   ]);
 
   grunt.registerTask('upload', function(n) {
+    grunt.task.run([ 'build' ]);
     if(grunt.option('prod')) {
       // add your production server task here
+      grunt.task.run([ 'deploy' ]);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
@@ -107,6 +144,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
       // add your production server task here
+      'shell'
   ]);
 
 
