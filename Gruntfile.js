@@ -90,7 +90,10 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
-        options: { stdout: true },
+        options: {
+          stdout: true, 
+          stderr: true
+        },
         command: 'git push azure master'
       }
     },
@@ -128,6 +131,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'jshint',
+    'mochaTest',
     'concat', 
     'uglify',
     'cssmin'
