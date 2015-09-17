@@ -12,8 +12,8 @@ var Link = require('../app/models/link');
 /////////////////////////////////////////////////////
 
 var User = require('../app/models/user');
-var Link = require('../app/models/link');
-xdescribe('MongoTests', function() {
+// var Link = require('../app/models/link');
+describe('MongoTests', function() {
 
   beforeEach(function(done) {
     // Log out currently signed in user
@@ -22,15 +22,15 @@ xdescribe('MongoTests', function() {
       .end(function(err, res) {
 
         // Delete objects from db so they can be created later for the test
-        Link.remove({url : 'http://www.roflzoo.com/'}).exec();
-        User.remove({username : 'Savannah'}).exec();
+        // Link.remove({url : 'http://www.roflzoo.com/'}).exec();
+        User.remove({username : 'Svnh'}).exec();
         User.remove({username : 'Phillip'}).exec();
 
         done();
       });
   });
 
-  describe('Link creation: ', function() {
+  xdescribe('Link creation: ', function() {
 
     it('Only shortens valid urls, returning a 404 - Not found for invalid urls', function(done) {
       request(app)
@@ -135,7 +135,7 @@ xdescribe('MongoTests', function() {
 
   }); // 'Link creation'
 
-  describe('Priviledged Access:', function() {
+  xdescribe('Priviledged Access:', function() {
 
     // /*  Authentication  */
     // // TODO: xit out authentication
@@ -210,12 +210,13 @@ xdescribe('MongoTests', function() {
   describe('Account Login:', function() {
 
     beforeEach(function(done) {
-      new User({
+        request(app)
+        .post('/signup')
+        .send({
           'username': 'Phillip',
-          'password': 'Phillip'
-      }).save(function() {
-        done();
-      });
+          'password': 'Phillip' })
+        .end(done);
+       
     });
 
     it('Logs in existing users', function(done) {
