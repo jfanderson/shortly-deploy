@@ -12,7 +12,7 @@ var Link = require('../app/models/link');
 /////////////////////////////////////////////////////
 
 var User = require('../app/models/user');
-// var Link = require('../app/models/link');
+var Link = require('../app/models/link');
 describe('MongoTests', function() {
 
   beforeEach(function(done) {
@@ -22,7 +22,7 @@ describe('MongoTests', function() {
       .end(function(err, res) {
 
         // Delete objects from db so they can be created later for the test
-        // Link.remove({url : 'http://www.roflzoo.com/'}).exec();
+        Link.remove({url : 'http://www.roflzoo.com/'}).exec();
         User.remove({username : 'Svnh'}).exec();
         User.remove({username : 'Phillip'}).exec();
 
@@ -30,7 +30,7 @@ describe('MongoTests', function() {
       });
   });
 
-  xdescribe('Link creation: ', function() {
+  describe('Link creation: ', function() {
 
     it('Only shortens valid urls, returning a 404 - Not found for invalid urls', function(done) {
       request(app)
@@ -100,13 +100,23 @@ describe('MongoTests', function() {
           visits: 0
         })
 
-        link.save(function() {
-          done();
+        link.setup(function(code) {
+          link.code = code;
+          link.save(function(err) {
+            if (err) {
+              console.log("Error saving link in spec", err);
+            } else {
+              done();
+            }
+          });
         });
       });
 
       it('Returns the same shortened code if attempted to add the same URL twice', function(done) {
-        var firstCode = link.code
+        var firstCode = link.code;
+        // var firstCode = "582d6";
+        // console.log(link.code);
+        // Link.findOne({ url: 'http://www.roflzoo.com/' }, function(link) {console.log('Test 1: ', link)});
         request(app)
           .post('/links')
           .send({
@@ -120,7 +130,9 @@ describe('MongoTests', function() {
       });
 
       it('Shortcode redirects to correct url', function(done) {
-        var sha = link.code;
+        // var sha = link.code;
+        var sha = "582d6";
+        // Link.findOne({ code: link.code }, function(link) {console.log('Test 2: ', link)});
         request(app)
           .get('/' + sha)
           .expect(302)
@@ -135,7 +147,7 @@ describe('MongoTests', function() {
 
   }); // 'Link creation'
 
-  xdescribe('Priviledged Access:', function() {
+  describe('Priviledged Access:', function() {
 
     // /*  Authentication  */
     // // TODO: xit out authentication
