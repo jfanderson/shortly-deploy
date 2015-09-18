@@ -6,18 +6,17 @@ var Schema = mongoose.Schema;
 
 mongoose.connect('mongodb://127.0.0.1:27017/shortly');
 
-//Make urls schema
-
-//make users schema
-
-
 module.exports.userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
 });
 
 module.exports.urlSchema = new Schema({
-
+  url: { type: String, required: true},
+  base_url: { type: String, required: false},
+  code: { type: String, required: false}, 
+  title: { type: String, required: true}, 
+  visits: { type: Number, required: true}
 });
 
 

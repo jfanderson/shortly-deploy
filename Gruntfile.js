@@ -11,7 +11,10 @@ module.exports = function(grunt) {
       },
       dependencies: {
         src: [
-          'public/lib/**/*.js'
+          'public/lib/underscore.js',
+          'public/lib/jquery.js',
+          'public/lib/handlebars.js',
+          'public/lib/backbone.js'
         ],
         dest: 'public/dist/dependencies.js'
       }
@@ -131,7 +134,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'jshint',
-    'mochaTest',
+    // 'mochaTest',
     'concat', 
     'uglify',
     'cssmin'
